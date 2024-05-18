@@ -92,6 +92,19 @@ const client = new MongoClient(uri, {
             )
             res.send(result);
         })
+        app.patch('/rent/:id',async(req,res)=>{
+            const id = req.params.id;
+            const {email} = req.body;
+            const result = await booksCollection.updateOne(
+                {_id: new ObjectId(id)},
+                {
+                    $push:{rentedBy:email},
+                    $inc:{copies:-1}
+
+                }
+            )
+            res.send(result);
+        })
 
         app.delete('/delete/:id',async (req,res) =>{
             const bookId = req.params.id;
