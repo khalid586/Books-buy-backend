@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
 
 
 const app = express();
@@ -17,13 +19,57 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 
-app.post('/add_book',(req,res)=>{
-    const data = req.body;
-    console.log(data)
-})
+require('dotenv').config();
+const uri = process.env.MONGO_URL
+
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    }
+  });
+  
+  
+  async function run() {
+    try {
+      // await client.connect();
+    //   const database = client.db("PlacesDatabase");
+    //   const placesData = database.collection('places');
+    //   const countriesCollection = database.collection('countries');
+
+        
+        const booksCollection = client.db('BooksCollection').collection('books');
+        
+        app.get('/books',async (req,res)=>{
+            const books = await booksCollection.find().toArray();
+            res.send(books);
+        })
+        app.get('/available',async (req,res)=>{
+            const books = await booksCollection.find({copies : {$gt:0}}).toArray();
+            res.send(books);
+        })
+        app.post('/add_book',async (req,res)=>{
+            const data = req.body;
+            const result = await booksCollection.insertOne(data);
+            res.send(result);
+        })
+
+
+
+        await client.db("admin").command({ ping: 1 });
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } catch(error){
+      console.error(error)
+    }
+  }
+  run().catch(console.dir);
+
 
 app.get('/',(req,res)=>{
-    res.send('This is working !!!!')
+    res.send('First version!!')
 })
 
 app.listen(port,() =>{
