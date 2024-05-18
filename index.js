@@ -47,6 +47,11 @@ const client = new MongoClient(uri, {
             const books = await booksCollection.find().toArray();
             res.send(books);
         })
+        app.get('/details/:id',async (req,res)=>{
+            const id = req.params.id;
+            const book = await booksCollection.findOne({_id: new ObjectId(id)});
+            res.send(book);
+        })
         app.get('/available',async (req,res)=>{
             const books = await booksCollection.find({copies : {$gt:0}}).toArray();
             res.send(books);
