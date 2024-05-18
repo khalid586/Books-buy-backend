@@ -61,6 +61,14 @@ const client = new MongoClient(uri, {
             const books = await booksCollection.find({copies : {$gt:0}}).toArray();
             res.send(books);
         })
+        app.get('/rented/:email',async(req,res)=>{
+            const email = req.params.email;
+            const result = await booksCollection.find({
+                rentedBy: email
+            }).toArray();
+            res.send(result);
+        })
+        
         app.post('/add_book',async (req,res)=>{
             const data = req.body;
             const result = await booksCollection.insertOne(data);
