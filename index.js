@@ -10,6 +10,7 @@ const port = process.env.PORT || 5007;
 const corsOptions = {
     origin: [ 
         'http://localhost:5173',
+        'http://localhost:5174',
         'https://books-buy1.web.app'
     ],
     optionsSuccessStatus: 200 
@@ -131,7 +132,7 @@ const client = new MongoClient(uri, {
 
 
 app.get('/',(req,res)=>{
-    res.send('First version!!')
+    res.send('Version 1.0!!')
 })
 
 app.listen(port,() =>{
