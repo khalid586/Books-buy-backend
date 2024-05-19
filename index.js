@@ -10,6 +10,7 @@ const port = process.env.PORT || 5007;
 const corsOptions = {
     origin: [ 
         'http://localhost:5173',
+        'https://books-buy1.web.app'
     ],
     optionsSuccessStatus: 200 
   };
